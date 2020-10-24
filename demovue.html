@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        {{ message }}
+
+        <p v-if="isMe">
+            Hey {{message}}
+        </p>
+
+        <button v-on:click="hello">
+                Click Me !!!
+        </button>
+        <span v-bind:title="message">
+            hey
+        </span>
+        <br>
+        bind: <input  v-bind:value="message">
+
+        <br>
+        model: <input  v-model="message">
+
+        
+        <br>
+        date <span>{{ now() }}</span>
+
+
+        <div>
+            <ul>
+                <li v-for="user in users" :key="user.id">
+                    {{ user.name }}
+                </li>
+            </ul>
+        </div>
+        <todo-item
+            v-for="item in groceryList"
+            v-bind:todo="item"
+            v-bind:key="item.id">
+        </todo-item>
+
+        <br>
+        <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+      </div>
+      <script>
+          Vue.component('todo-item', {
+            props: ['todo'],
+            template: '<li>{{ todo.text }}</li>'
+            })
+
+
+
+          var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue222',
+                isMe :false,
+                users:[
+                    {id:1,name:'john'},
+                    {id:2,name:'cat'},
+                    {id:3,name:'dog'}
+                ],
+                groceryList: [
+                { id: 0, text: 'Vegetables' },
+                { id: 1, text: 'Cheese' },
+                { id: 2, text: 'Whatever else humans are supposed to eat' }
+                ],
+                rawHtml : "<b>Test</b>"
+
+            },
+            methods:{
+                hello: function(){
+                    this.message="thank you"
+                }, 
+                now: function () {
+                    return Date.now()
+                }
+            }
+            })
+      </script>
+
+
+<!--
+            <a v-bind:[attributeName]="url"> ... </a>
+            <a v-on:[eventName]="doSomething"> ... </a>
+            <a v-bind:['foo' + bar]="value"> ... </a>
+            <form v-on:submit.prevent="onSubmit"> ... </form>
+        -->
+        <!-- short hand-- v-bind >-->
+            <!--
+        <a :href="url"> ... </a>
+        -->
+
+        <!-- shorthand with dynamic argument (2.6.0+) -->
+        <!--
+        <a :[key]="url"> ... </a>
+        -->
+
+        <!-- v-on short -->
+        <!-- shorthand -->
+        <!--
+            <a @click="doSomething"> ... </a>
+        -->
+        
+        <!-- shorthand with dynamic argument (2.6.0+) -->
+        <!--
+        <a @[event]="doSomething"> ... </a>
+        -->
+
+        <!--
+https://vuejs.org/v2/guide/computed.html
+        -->
+        
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <title>Web PR</title>
+    <meta name="keywords" content="TAIYO" />
+    <meta name="description" content="TAIYO" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <meta http-equiv="cleartype" content="on" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+
+
+    <link href="css/bootstrap.css" rel="stylesheet" media="screen" />
+    <link href="css/bootswatch.min.css" rel="stylesheet" />
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+
+    <!--  the favicon & iOS home screen icon are both 57x57 PNG's. Use a full URL file path for Android devices.  -->
+    <!--  <link rel="apple-touch-icon-precomposed" href="http://yoursite.com/apple-touch-icon.png"/>  -->
+    <!--  <link rel="icon" type="image/vnd.microsoft.icon" href="http://yoursite.com/favicon.png" />  -->
+    <!--  make a site map for your mobile site, even if you have a computer browser site too.  www.xml-sitemaps.com  -->
+    <!--  <link rel="alternate" type="application/rss+xml" title="ROR" href="ror.xml" /> -->
+
+
+
+    <link href="css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+
+</head>
+<body style="font-size:large">
+    <div>
+
+        <div class="content">
+            <div id="navButtons">
+                <ul id="mainmenu"></ul>
+            </div>
+
+
+            <div id="app">
+                <div v-for="row in records">
+                    <div>{{row.country}}</div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- Modal -->
+
+
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootswatch.js"></script>
+    <script src="js/jquery-ui-1.10.4.custom.js"></script>
+
+
+    <script src="js_other/axios.min.js"></script>
+    <script src="js_other/vue.js"></script>
+    <script src="js_other/numeral.js"></script>
+    <script src="js_other/jquery.dataTables.js"></script>
+    <!--http://numeraljs.com/-->
+
+
+    <script src="js/jquery.blockUI.js"></script>
+    <script src="js/appMain.js?v=20200601"></script>
+   
+
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+
+
+    <script>
+        
+        firebase.initializeApp({
+            apiKey: "AIzaSyAwnSeNGqRYhDhcNb028rzUGCzLqnFPKfs",
+            authDomain: "vuefire-8a3c5.firebaseapp.com",
+            databaseURL: "https://vuefire-8a3c5.firebaseio.com",
+            projectId: "vuefire-8a3c5",
+        });
+
+        var db = firebase.firestore();
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+
+
+        });
+
+
+        function onError() {
+            //alert("error time out");
+            alert("error");
+            $("#loaderDiv").hide();
+        }
+
+
+        function querystring(key) {
+            var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
+            var r = [], m;
+            while ((m = re.exec(document.location.search)) != null) r.push(m[1]);
+            return r;
+        }
+
+    </script>
+    <script>
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                records: [],
+                message: '',
+                form: {
+                    keyword: "",
+                }
+            },
+            async created() {
+                var docref =db.collection("cities");
+                
+                await docref.get().then((querySnapshot)=>{
+                    querySnapshot.forEach((doc)=>{
+                        //console.log(doc.data());
+                        this.records.push(doc.data());
+
+                    });
+                    console.log(this.records);
+
+                }).catch((err)=>{
+                    console.log("err " + err);
+                });
+            
+        
+            },
+            
+        });
+
+    </script>
+
+</body>
+</html>
+
+
+
+
+
