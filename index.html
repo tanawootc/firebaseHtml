@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <!--
+        https://firebase.google.com/docs/firestore/data-model
+    -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+
+    <script>
+
+
+
+        firebase.initializeApp({
+            apiKey: "AIzaSyAwnSeNGqRYhDhcNb028rzUGCzLqnFPKfs",
+            authDomain: "vuefire-8a3c5.firebaseapp.com",
+            databaseURL: "https://vuefire-8a3c5.firebaseio.com",
+            projectId: "vuefire-8a3c5",
+        });
+
+        var db = firebase.firestore();
+        //add();
+        //addlandmark();
+        //showdata();
+        //showcollection();
+        //adddemo();
+        //getallcity();
+        getallcitywhere();
+        //getgroupcity();
+        //listenDataCitwhere();
+        //listenDataCitwhereTypeChange();
+
+        function getgroupcity(){
+            var doc =db.collectionGroup('landmarks').where('type', '==', 'museum');
+            doc.get()
+            .then((querySnapshot)=>{
+                querySnapshot.forEach((doc)=>{
+                    console.log(doc.data());
+                });
+            });
+
+        }
+
+        function listenDataCity(){
+            db.collection("cities").doc("SF")
+            .onSnapshot((doc)=>{
+                console.log(doc.data());
+            });
+            
+        }
+
+        function listenDataCitwhere(){
+            db.collection("cities").where("state","==","CA")
+            .onSnapshot((querySnapshot)=>{
+                var cities=[];
+                querySnapshot.forEach((doc)=>{
+                    cities.push(doc.data().name);
+                    console.log(doc.data());
+                })
+                console.log("city:" , cities.join(", "))
+
+            });
+            
+        }
+
+        function listenDataCitwhereTypeChange(){
+            db.collection("cities").where("state","==","CA")
+            .onSnapshot((querySnapshot)=>{
+                querySnapshot.docChanges().forEach((change)=>{
+                    //added -- removed
+                    if(change.type=="modified"){
+                        console.log(" Modified " ,change.doc.data());
+                    }
+                    else{
+                        //console.log(" other " ,change.doc.data());
+                    }
+                })
+            });
+            
+        }
+
+
+        function getcity(){
+            var docref =db.collection("cities").doc("SF");
+            /*
+            var getOptions = {
+                source: 'cache'
+            };  
+
+             docref.get(getOptions).then
+
+            */
+            docref.get().then((doc)=>{
+                if(doc.exists){
+                    console.log("find data");
+                    console.log(doc.data());
+                }
+                else{
+                    console.log("no data");
+                }
+                
+            }).catch((err)=>{
+                console.log("err " + err);
+            });
+            
+
+        }
+
+        function getallcity(){
+            var docref =db.collection("cities");
+            
+            docref.get().then((querySnapshot)=>{
+                querySnapshot.forEach((doc)=>{
+                    console.log(doc.data());
+                });
+                
+            }).catch((err)=>{
+                console.log("err " + err);
+            });
+            
+
+        }
+
+        function getallcitywhere(){
+
+            var docref =db.collection("cities");
+            docref = docref.where("state", ">=", "CA").where("state", "<=", "IN");
+            //var docref =db.collection("cities").where("capital","==",true);
+
+            //docref = docref.where("state", "==", "CA");
+            //docref = docref.where('country', 'not-in', ['USA', 'Japan']);
+            //docref=docref.where("state", "==", "CA").where("population", ">", 1000000);
+            //docref = docref.where("population", ">", 100000)
+            //docref = docref.where("name", ">=", "San Francisco")
+            
+            /*
+            var citiesRef = db.collection("cities");
+            var query = citiesRef.where("capital", "==", true);
+            */
+
+            docref.get().then((querySnapshot)=>{
+                querySnapshot.forEach((doc)=>{
+                    console.log(doc.data());
+                });
+                
+            }).catch((err)=>{
+                console.log("err " + err);
+            });
+            
+
+        }
+
+        function showcollection(){
+            var ref = db.doc('userslist/0OfiXHzmFuTkHHegr8jK');
+            ref.get()
+            .then((doc)=>{
+                console.log(doc.get("first"));
+                console.log(doc.data());
+            });
+
+            var ref2=  db.collection("userslist");
+                ref2
+                .get()
+                .then(
+                    (querySnapshot) => {
+                        console.log(querySnapshot);
+                    }
+                );
+            
+            
+            
+            //var alovelaceDocumentRef = db.collection('users').doc('alovelace');
+            //var alovelaceDocumentRef = db.doc('users/alovelace');
+            /*
+            var messageRef = db.collection('rooms').doc('roomA')
+                .collection('messages').doc('message1');
+            */
+            
+
+            // /users/FCgWhB7HfhHhB2bZTCDY
+        }
+
+        function showdata(){
+           
+            db.collection("userslist").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                //console.log(`${doc.id} => ${doc.data()}`);
+
+                console.log(doc.data());
+
+                
+                console.log(doc.get("first"));
+                console.log(doc.get("born"));
+            });
+            });
+
+        }
+
+        function adddemo(){
+            var citiesRef = db.collection("cities");
+
+            citiesRef.doc("SF").set({
+                name: "San Francisco", state: "CA", country: "USA",
+                capital: false, population: 860000,
+                regions: ["west_coast", "norcal"] });
+            citiesRef.doc("LA").set({
+                name: "Los Angeles", state: "CA", country: "USA",
+                capital: false, population: 3900000,
+                regions: ["west_coast", "socal"] });
+            citiesRef.doc("DC").set({
+                name: "Washington, D.C.", state: null, country: "USA",
+                capital: true, population: 680000,
+                regions: ["east_coast"] });
+            citiesRef.doc("TOK").set({
+                name: "Tokyo", state: null, country: "Japan",
+                capital: true, population: 9000000,
+                regions: ["kanto", "honshu"] });
+            citiesRef.doc("BJ").set({
+                name: "Beijing", state: null, country: "China",
+                capital: true, population: 21500000,
+                regions: ["jingjinji", "hebei"] });
+        }
+
+        function addlandmark(){
+            var citiesRef = db.collection('cities');
+
+            var landmarks = Promise.all([
+                citiesRef.doc('SF').collection('landmarks').doc().set({
+                    name: 'Golden Gate Bridge',
+                    type: 'bridge'
+                }),
+                citiesRef.doc('SF').collection('landmarks').doc().set({
+                    name: 'Legion of Honor',
+                    type: 'museum'
+                }),
+                citiesRef.doc('LA').collection('landmarks').doc().set({
+                    name: 'Griffith Park',
+                    type: 'park'
+                }),
+                citiesRef.doc('LA').collection('landmarks').doc().set({
+                    name: 'The Getty',
+                    type: 'museum'
+                }),
+                citiesRef.doc('DC').collection('landmarks').doc().set({
+                    name: 'Lincoln Memorial',
+                    type: 'memorial'
+                }),
+                citiesRef.doc('DC').collection('landmarks').doc().set({
+                    name: 'National Air and Space Museum',
+                    type: 'museum'
+                }),
+                citiesRef.doc('TOK').collection('landmarks').doc().set({
+                    name: 'Ueno Park',
+                    type: 'park'
+                }),
+                citiesRef.doc('TOK').collection('landmarks').doc().set({
+                    name: 'National Museum of Nature and Science',
+                    type: 'museum'
+                }),
+                citiesRef.doc('BJ').collection('landmarks').doc().set({
+                    name: 'Jingshan Park',
+                    type: 'park'
+                }),
+                citiesRef.doc('BJ').collection('landmarks').doc().set({
+                    name: 'Beijing Ancient Observatory',
+                    type: 'museum'
+                })
+            ]);
+        }
+        function add(){
+
+            db.collection("userslist").add({
+            first: "Alan",
+            middle: "Mathison",
+            last: "Turing",
+            born: 1912
+            })
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef.id);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+            }
+
+      </script>
+
+  </body>
+</html>
