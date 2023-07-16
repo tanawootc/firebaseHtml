@@ -18,20 +18,23 @@
 
 
         firebase.initializeApp({
-            apiKey: "AIzaSyAwnSeNGqRYhDhcNb028rzUGCzLqnFPKfs",
-            authDomain: "vuefire-8a3c5.firebaseapp.com",
-            databaseURL: "https://vuefire-8a3c5.firebaseio.com",
-            projectId: "vuefire-8a3c5",
+          apiKey: "AIzaSyA1hIp83yHlIa0GOkO0VoIyRqhVJRweGMw",
+          authDomain: "demohtmlfirebase-f243d.firebaseapp.com",
+          projectId: "demohtmlfirebase-f243d",
+          storageBucket: "demohtmlfirebase-f243d.appspot.com",
+          messagingSenderId: "568615771684",
+          appId: "1:568615771684:web:b9348a90717d144c0c02b1"
         });
 
         var db = firebase.firestore();
         //add();
         //addlandmark();
-        //showdata();
+        // showdata();
+        showdatacustomer();
         //showcollection();
         //adddemo();
         //getallcity();
-        getallcitywhere();
+        // getallcitywhere();
         //getgroupcity();
         //listenDataCitwhere();
         //listenDataCitwhereTypeChange();
@@ -201,6 +204,22 @@
             });
 
         }
+
+        function showdatacustomer(){
+           
+           db.collection("customer").get().then((querySnapshot) => {
+           querySnapshot.forEach((doc) => {
+               //console.log(`${doc.id} => ${doc.data()}`);
+
+               console.log(doc.data());
+
+               
+               console.log(doc.get("name"));
+            //    console.log(doc.get("born"));
+           });
+           });
+
+       }
 
         function adddemo(){
             var citiesRef = db.collection("cities");
